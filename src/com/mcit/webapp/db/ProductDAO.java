@@ -1,9 +1,12 @@
 package com.mcit.webapp.db;
 
+import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ProductDAO {
 
@@ -77,5 +80,19 @@ public class ProductDAO {
 		int noOfRowAffedted = pstm.executeUpdate();
 		
 		return noOfRowAffedted;
+	}
+	
+	public static List<ResultSet> getAllProductsAndCount() throws SQLException {
+		
+		List<ResultSet> list = new ArrayList<>();
+		CallableStatement cstm = DBConnection.getConnection().prepareCall("{ call get_all_products_and_count() }");
+		
+		ResultSet rst1 = cstm.executeQuery();
+		list.add(rst1);
+		
+		cstm.getMoreResults();		
+		ResultSet rst2 = cstm.getResultSet();
+		list.add(rst2);
+		return list ; 
 	}
 }
